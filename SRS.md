@@ -13,7 +13,26 @@
 **Date:** 27 Jan 2026  
 
 ---
+# Smart-Traffic-Signal-Automation-System
+# 🔐🚦 Smart Traffic Congestion Control System
 
+A privacy-aware smart traffic signal control system that uses Machine Learning to predict congestion at road junctions and dynamically allocate green signal timings.  
+The system is designed to later integrate cryptographic techniques so that traffic data can be processed securely without exposing raw vehicle information.
+
+---
+
+## 📌 Project Overview
+
+Traffic congestion is a major problem in urban areas. Traditional traffic systems:
+- Use fixed-time signals  
+- Do not adapt to real-time traffic  
+- Often collect raw vehicle data, leading to privacy issues  
+
+This project:
+- Predicts congestion using ML
+- Dynamically controls signal timings
+- Can be extended to operate on encrypted data
+- Avoids centralized surveillance of vehicle movement  
 ## 1. Functional Requirements (FR)
 
 Functional requirements describe what the system must do.
