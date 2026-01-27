@@ -2,7 +2,7 @@
 
 ## Project: Smart Traffic Signal Automation System  
 **Module:** CS331 Software Engineering Lab  
-**Group:** 9  
+**Group:** 19  
 
 **Members:**
 - Shivam Panwar (2301200)  
