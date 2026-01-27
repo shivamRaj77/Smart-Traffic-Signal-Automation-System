@@ -1,134 +1,184 @@
 # Software Requirements Specification (SRS)
 
-## Project: Smart Traffic Signal Automation System  
-**Module:** CS331 Software Engineering Lab  
-**Group:** 19  
+## Project: Smart Traffic Signal Automation System
+
+**Course:** CS331 Software Engineering Lab
 
 **Members:**
-- Shivam Panwar (2301200)  
-- Shivam Raj (2301202)  
-- Uddhav Tomar (2301235)  
 
-**Version:** 1.0  
-**Date:** 27 Jan 2026  
-
----
-# Smart-Traffic-Signal-Automation-System
-# 🔐🚦 Smart Traffic Congestion Control System
-
-A privacy-aware smart traffic signal control system that uses Machine Learning to predict congestion at road junctions and dynamically allocate green signal timings.  
-The system is designed to later integrate cryptographic techniques so that traffic data can be processed securely without exposing raw vehicle information.
+          Shivam Panwar - 2301200
+          Shivam Raj - 2301202
+          Uddhav Singh Tomar - 2301235
 
 ---
 
-## 📌 Project Overview
+## 1. Introduction
 
-Traffic congestion is a major problem in urban areas. Traditional traffic systems:
-- Use fixed-time signals  
-- Do not adapt to real-time traffic  
-- Often collect raw vehicle data, leading to privacy issues  
+### 1.1 Purpose
 
-This project:
-- Predicts congestion using ML
-- Dynamically controls signal timings
-- Can be extended to operate on encrypted data
-- Avoids centralized surveillance of vehicle movement  
-## 1. Functional Requirements (FR)
+This document specifies the functional and non-functional requirements of the Smart Traffic Signal Automation System. It serves as a reference for developers, evaluators, and stakeholders to understand system behavior and constraints.
 
-Functional requirements describe what the system must do.
+### 1.2 Scope
 
-### FR-1: Traffic Data Acquisition & Monitoring
-- The system shall collect real-time traffic data for each junction, including vehicle
-  count and average speed for all four directions (North, South, East, West).
-- The system shall support synthetic traffic data generation for testing and simulation
-  purposes.
-- The system shall periodically update traffic data at fixed intervals to reflect current
-  road conditions.
+The system automates traffic signal control at road junctions by analyzing traffic congestion and dynamically adjusting signal timings. The project focuses on software-level automation and simulation; physical traffic signal hardware control is outside the scope.
 
----
+### 1.3 Definitions, Acronyms, and Abbreviations
 
-### FR-2: Congestion Detection & Analysis
-- The system shall compute congestion levels for each direction of a junction using
-  traffic parameters such as vehicle count and speed.
-- The system shall classify congestion into predefined levels (Low, Medium, High).
-- The system shall maintain congestion data independently for each junction in the
-  traffic network.
+| Term       | Description                                      |
+| ---------- | ------------------------------------------------ |
+| SRS        | Software Requirements Specification              |
+| Junction   | A four-way traffic intersection                  |
+| Congestion | Traffic density based on vehicle count and speed |
+| NFR        | Non-Functional Requirement                       |
+| FR         | Functional Requirement                           |
+
+### 1.4 References
+
+* IEEE 830 / IEEE 29148 Software Requirements Specification Standards
+* Research literature on smart traffic management systems
 
 ---
 
-### FR-3: Adaptive Signal Timing Control
-- The system shall dynamically calculate green signal duration for each direction based
-  on the detected congestion level.
-- The system shall ensure a minimum green signal time for all directions to avoid
-  starvation.
-- The system shall allocate longer green signal durations to directions with higher
-  congestion.
-- The system shall operate independently for multiple junctions arranged in a grid-based
-  road network.
+## 2. Overall Description
+
+### 2.1 Product Perspective
+
+The Smart Traffic Signal Automation System functions as an intelligent decision-support layer within a smart city environment. It analyzes traffic conditions and determines optimal signal timings to reduce congestion.
+
+### 2.2 Product Functions
+
+* Collect traffic data per junction
+* Detect congestion per direction
+* Dynamically adjust traffic signal timings
+* Monitor and analyze multiple junctions
+* Identify critical congestion points
+
+### 2.3 User Classes and Characteristics
+
+| User                 | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| Traffic Operator     | Monitors traffic conditions and system output    |
+| System Administrator | Maintains and configures the system              |
+| Student/Researcher   | Uses the system for analysis and experimentation |
+
+### 2.4 Operating Environment
+
+* Python-based software system
+* Desktop or laptop computer
+* Simulated traffic input data
+
+### 2.5 Design and Implementation Constraints
+
+* Simulation-based traffic data
+* No physical signal hardware integration
+* Academic time and resource limitations
+
+### 2.6 Assumptions and Dependencies
+
+* Traffic flows follow basic lane discipline
+* Input data is reasonably accurate
+* Time synchronization exists between system components
 
 ---
 
-### FR-4: Multi-Junction Traffic Coordination
-- The system shall support traffic management for multiple interconnected junctions
-  (e.g., a 3×3 junction grid).
-- The system shall compute congestion statistics separately for each junction.
-- The system shall identify the most congested junction within the network at any given
-  time.
+## 3. Functional Requirements (FR)
+
+### 3.1 Traffic Data Acquisition & Monitoring
+
+* **FR-1.01:** The system shall collect traffic data including vehicle count and average speed for each direction of a junction.
+* **FR-1.02:** The system shall support synthetic traffic data generation for testing and simulation.
+* **FR-1.03:** The system shall periodically update traffic data to reflect current conditions.
+
+### 3.2 Congestion Detection & Analysis
+
+* **FR-2.01:** The system shall compute congestion levels using traffic parameters.
+* **FR-2.02:** The system shall classify congestion into Low, Medium, and High levels.
+* **FR-2.03:** The system shall maintain congestion data independently for each junction.
+
+### 3.3 Adaptive Signal Timing Control
+
+* **FR-3.01:** The system shall dynamically calculate green signal duration based on congestion.
+* **FR-3.02:** The system shall enforce a minimum green time for all directions.
+* **FR-3.03:** The system shall allocate longer green times to more congested directions.
+
+### 3.4 Multi-Junction Traffic Coordination
+
+* **FR-4.01:** The system shall support multiple interconnected junctions.
+* **FR-4.02:** The system shall analyze congestion independently for each junction.
+* **FR-4.03:** The system shall identify the most congested junction.
+
+### 3.5 Decision Support & Monitoring Interface
+
+* **FR-5.01:** The system shall display congestion levels and signal timings.
+* **FR-5.02:** The system shall highlight critical junctions requiring attention.
+* **FR-5.03:** The system shall provide human-readable traffic management suggestions.
 
 ---
 
-### FR-5: Decision Support & Monitoring Interface
-- The system shall display congestion levels and green signal timings for each junction.
-- The system shall provide advisory outputs highlighting critical junctions that require
-  immediate attention.
-- The system shall generate human-readable recommendations such as increasing
-  monitoring or traffic diversion for high-congestion junctions.
+## 4. Non-Functional Requirements (NFR)
+
+* **NFR-01 (Performance):** The system shall compute signal timings within a time suitable for real-time operation.
+* **NFR-02 (Scalability):** The system shall support expansion to additional junctions.
+* **NFR-03 (Reliability):** The system shall operate correctly under varying traffic conditions.
+* **NFR-04 (Usability):** The system shall present outputs clearly for traffic operators.
+* **NFR-05 (Maintainability):** The system shall be modular and easy to update.
+* **NFR-06 (Extensibility):** The system shall allow future integration with real sensors and smart city infrastructure.
 
 ---
 
-## 2. Non-Functional Requirements (NFR)
+## 5. External Interface Requirements
 
-Non-functional requirements define how well the system performs.
+### 5.1 User Interfaces
 
-- **NFR-1 (Performance):**  
-  The system shall compute congestion levels and signal timings within a short response
-  time suitable for real-time traffic control.
+* Traffic monitoring dashboard
+* Visualization of signal timings
 
-- **NFR-2 (Scalability):**  
-  The system architecture shall support easy expansion to additional junctions without
-  significant redesign.
+### 5.2 Hardware Interfaces
 
-- **NFR-3 (Reliability):**  
-  The system shall continue to function correctly under fluctuating traffic loads and
-  incomplete data inputs.
+* Simulated traffic sensors
+* Future camera or IoT sensor integration
 
-- **NFR-4 (Usability):**  
-  The system shall present traffic and signal information in a clear and understandable
-  manner suitable for traffic operators.
+### 5.3 Software Interfaces
 
-- **NFR-5 (Maintainability):**  
-  The system shall be modular, allowing independent updates to traffic analysis, signal
-  control logic, and monitoring components.
-
-- **NFR-6 (Extensibility):**  
-  The system shall allow future integration with real-world sensors, cameras, or smart
-  city infrastructure.
+* Python libraries for data processing
+* Visualization and plotting libraries
 
 ---
 
-## 3. Assumptions & Constraints
+## 6. Data Requirements
 
-- The system assumes traffic flows through four-way junctions.
-- Real-world deployment would require sensor integration, which is simulated in this
-  project.
-- The project focuses on logic and automation rather than physical signal hardware
-  control.
+* Vehicle count per direction
+* Average vehicle speed
+* Congestion levels
+* Signal timing durations
 
 ---
 
-## 4. System Scope
+## 7. Security Requirements
 
-The Smart Traffic Signal Automation System aims to simulate an intelligent and adaptive
-traffic management environment for multi-junction road networks. The project focuses on
-algorithmic decision-making, congestion analysis, and signal timing optimization rather
-than real-world hardware deployment.
+* Restricted access for system configuration
+* Secure storage of configuration files
+
+---
+
+## 8. Quality Attributes
+
+* High availability
+* Fault tolerance
+* Efficient resource usage
+
+---
+
+## 9. Future Enhancements
+
+* Integration with real-time traffic sensors
+* Emergency vehicle priority handling
+* Predictive traffic analysis using machine learning
+
+---
+
+## 10. Appendices
+
+* Sample traffic data formats
+* Congestion calculation formulas
+* System architecture diagrams
