@@ -25,11 +25,11 @@ This project:
 
 Each junction is modeled as a 4-way intersection:
 
-    North
-      ↑
+       North
+         ↑
 West ←---+---→ East
-↓
-South
+         ↓
+       South
 
 
 For every junction:
