@@ -1,4 +1,5 @@
-# 🔐🚦 Smart Traffic Automation System
+# Smart-Traffic-Signal-Automation-System
+# 🔐🚦 Smart Traffic Congestion Control System
 
 A privacy-aware smart traffic signal control system that uses Machine Learning to predict congestion at road junctions and dynamically allocate green signal timings.  
 The system is designed to later integrate cryptographic techniques so that traffic data can be processed securely without exposing raw vehicle information.
@@ -24,16 +25,14 @@ This project:
 
 Each junction is modeled as a 4-way intersection:
 
-`           North
-    
-             ↑
-      
-    West ←---+---→ East
 
-             ↓
-
-            South
 `
+=======
+       North
+         ↑
+West ←---+---→ East
+         ↓
+       South
 
 
 For every junction:
@@ -44,15 +43,10 @@ For every junction:
 The city is modeled as a 3×3 grid:
 
  J1 -------- J2 -------- J3
- 
   |           |           |
-  
  J4 -------- J5 -------- J6
- 
   |           |           |
-  
  J7 -------- J8 -------- J9
- 
 
 Each junction works independently using the same ML model.
 
