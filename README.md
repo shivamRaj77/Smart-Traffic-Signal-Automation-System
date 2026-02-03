@@ -25,15 +25,13 @@ This project:
 
 Each junction is modeled as a 4-way intersection:
 
-
 `
-=======
        North
          ↑
 West ←---+---→ East
          ↓
        South
-
+`
 
 For every junction:
 - Vehicle count and average speed are collected per direction
