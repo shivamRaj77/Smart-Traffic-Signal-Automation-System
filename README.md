@@ -25,12 +25,13 @@ This project:
 
 Each junction is modeled as a 4-way intersection:
 
+```
        North
          ↑
 West ←---+---→ East
          ↓
        South
-
+```
 
 For every junction:
 - Vehicle count and average speed are collected per direction
@@ -38,13 +39,13 @@ For every junction:
 - Green signal time is allocated proportionally
 
 The city is modeled as a 3×3 grid:
-
+```
  J1 -------- J2 -------- J3
   |           |           |
  J4 -------- J5 -------- J6
   |           |           |
  J7 -------- J8 -------- J9
-
+```
 Each junction works independently using the same ML model.
 
 ---
