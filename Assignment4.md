@@ -92,87 +92,108 @@ Simple Layer Diagram:
 
 * Ideal for simulation-based systems
 
-# **II. Application Components**
+# Application Components
 
-Below are the **core software components** of the system.
+The Smart Traffic Automation System follows a Layered Architecture, where components are organized into distinct layers. Each layer has a specific responsibility and interacts only with adjacent layers.
 
----
+1. Presentation Layer (User Interface Layer)
 
-## **1\. Traffic Sensor Component**
+This layer handles interaction with system administrators and operators.
 
-* Collects vehicle count and speed
+Components:
+• Reporting & Analytics Component
 
-* Acts as the data input source
+Displays traffic reports and visual analytics
 
----
+Provides dashboards for monitoring congestion
 
-## **2\. Traffic Data Management Component**
+Allows viewing of historical data and trends
 
-* Stores raw and processed traffic data
+• Configuration Component
 
-* Manages timestamps and metrics
+Allows administrators to update:
 
----
+Congestion thresholds
 
-## **3\. Congestion Analysis Component**
+Signal timing limits
 
-* Calculates traffic density
+System parameters
 
-* Classifies congestion levels (Low / Medium / High)
+Ensures dynamic system customization
 
----
+2. Application / Business Logic Layer
 
-## **4\. Signal Control Component**
+This is the core processing layer where all intelligent decisions are made.
 
-* Computes adaptive signal timings
+Components:
+• Congestion Analysis Component
 
-* Updates traffic signal states
+Calculates traffic density
 
----
+Classifies congestion levels (Low / Medium / High)
 
-## **5\. Junction Management Component**
+Applies predefined rules and thresholds
 
-* Coordinates sensors and signal controllers
+• Signal Control Component
 
-* Manages traffic flow per junction
+Computes adaptive signal timings
 
----
+Adjusts green/red duration dynamically
 
-## **6\. Traffic Monitoring Component**
+Ensures safety constraints
 
-* Oversees multiple junctions
+• Junction Management Component
 
-* Generates system-level insights
+Coordinates sensors and signal controllers
 
----
+Manages traffic flow per junction
 
-## **7\. Reporting & Analytics Component**
+Resolves lane-level traffic conflicts
 
-* Generates traffic reports
+• Traffic Monitoring Component
 
-* Provides visual analytics to administrators
+Monitors multiple junctions
 
----
+Aggregates system-wide traffic data
 
-## **8\. Data Storage Component**
+Detects abnormal patterns
 
-* Stores traffic history
+3. Data Access Layer
 
-* Stores signal timing logs
+This layer handles storage and retrieval of system data.
 
----
+Components:
+• Traffic Data Management Component
 
-## **9\. Configuration Component**
+Validates and preprocesses incoming traffic data
 
-* Maintains system thresholds
+Structures raw sensor input
 
-* Manages signal timing limits
+Maintains timestamps and metrics
 
----
+• Data Storage Component
 
-## **10\. Simulation Component**
+Stores historical traffic records
 
-* Generates synthetic traffic data
+Maintains signal timing logs
 
-* Used for testing and evaluation
+Supports reporting and analytics
 
+4. Infrastructure / External Layer
+
+This layer interacts with external systems or hardware.
+
+Components:
+• Traffic Sensor Component
+
+Collects vehicle count and speed
+
+Acts as real-time data source
+
+Can represent physical or simulated sensors
+
+• Simulation Component
+
+Generates synthetic traffic data
+
+Used for testing and system evaluation
