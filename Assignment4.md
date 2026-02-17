@@ -42,7 +42,7 @@ The Layered Architecture enables modular development, simplifies maintenance, an
 This separation confirms the system follows a **Layered Architecture**.
 
 Simple Layer Diagram:
-
+``
 \+----------------------------+  
 |   Presentation Layer       |  
 | (Reports, Analytics UI)    |  
@@ -53,6 +53,7 @@ Simple Layer Diagram:
 |   Data Layer               |  
 | (Traffic & Signal Data)    |  
 \+----------------------------+
+``
 
 ## **I-B. Why Layered Architecture is the Best Choice (5 Marks)**
 
@@ -92,7 +93,7 @@ Simple Layer Diagram:
 
 * Ideal for simulation-based systems
 
-# Application Components
+# II. Application Components
 
 ## Smart Traffic Automation System
 
