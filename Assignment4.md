@@ -40,8 +40,10 @@ The Layered Architecture enables modular development, simplifies maintenance, an
   * Historical analytics
 
 This separation confirms the system follows a **Layered Architecture**.
-``
+
 Simple Layer Diagram:
+
+
 \+----------------------------+  
 |   Presentation Layer       |  
 | (Reports, Analytics UI)    |  
@@ -52,7 +54,7 @@ Simple Layer Diagram:
 |   Data Layer               |  
 | (Traffic & Signal Data)    |  
 \+----------------------------+
-``
+
 
 ## **I-B. Why Layered Architecture is the Best Choice (5 Marks)**
 
