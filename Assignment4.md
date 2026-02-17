@@ -56,7 +56,7 @@ Simple Layer Diagram:
 \+----------------------------+
 
 
-## **I-B. Why Layered Architecture is the Best Choice (5 Marks)**
+## **I-B. Why Layered Architecture is the Best Choice **
 
 ### **Scalability**
 
