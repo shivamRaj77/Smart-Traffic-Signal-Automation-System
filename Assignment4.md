@@ -40,9 +40,8 @@ The Layered Architecture enables modular development, simplifies maintenance, an
   * Historical analytics
 
 This separation confirms the system follows a **Layered Architecture**.
-
-Simple Layer Diagram:
 ``
+Simple Layer Diagram:
 \+----------------------------+  
 |   Presentation Layer       |  
 | (Reports, Analytics UI)    |  
