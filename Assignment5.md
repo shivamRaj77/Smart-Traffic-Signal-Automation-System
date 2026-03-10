@@ -157,17 +157,65 @@ Purpose:
 * Determines traffic congestion level based on vehicle density.
 
 ```python
+import random
+import time
+from datetime import datetime
+
 class CongestionAnalyzer:
 
+    def __init__(self):
+        self.history = []
+
     def analyze_congestion(self, vehicle_count, avg_speed):
+
+        if avg_speed <= 0:
+            return "Invalid"
+
         density = vehicle_count / avg_speed
 
         if density > 1.5:
-            return "High"
+            congestion = "High"
         elif density > 0.8:
-            return "Medium"
+            congestion = "Medium"
         else:
-            return "Low"
+            congestion = "Low"
+
+        timestamp = datetime.now().strftime("%H:%M:%S")
+
+        record = {
+            "time": timestamp,
+            "vehicles": vehicle_count,
+            "speed": avg_speed,
+            "density": round(density,2),
+            "congestion": congestion
+        }
+
+        self.history.append(record)
+
+        print("\n----- Traffic Sensor Reading -----")
+        print("Time:", timestamp)
+        print("Vehicle Count:", vehicle_count)
+        print("Average Speed:", avg_speed)
+        print("Density:", round(density,2))
+        print("Congestion Level:", congestion)
+
+        return congestion
+
+
+def simulate_traffic(analyzer):
+
+    while True:
+        vehicle_count = random.randint(20,150)
+        avg_speed = random.randint(10,80)
+
+        analyzer.analyze_congestion(vehicle_count, avg_speed)
+
+        time.sleep(3)   # simulate sensor update every 3 seconds
+
+
+analyzer = CongestionAnalyzer()
+
+simulate_traffic(analyzer)
 ```
 
 ---
@@ -179,7 +227,13 @@ Purpose:
 * Adjusts traffic signal timing based on congestion level.
 
 ```python
+import time
+import random
+
 class SignalController:
+
+    def __init__(self):
+        self.current_signal = "RED"
 
     def compute_signal_timing(self, congestion):
 
@@ -189,6 +243,42 @@ class SignalController:
             return 40
         else:
             return 20
+
+    def run_signal_cycle(self, congestion):
+
+        green_time = self.compute_signal_timing(congestion)
+
+        print("\n===== Traffic Signal Update =====")
+        print("Congestion Level:", congestion)
+
+        self.current_signal = "GREEN"
+        print("Signal:", self.current_signal)
+
+        for i in range(green_time,0,-10):
+            print("Remaining green time:", i, "seconds")
+            time.sleep(1)
+
+        self.current_signal = "YELLOW"
+        print("Signal:", self.current_signal)
+        time.sleep(2)
+
+        self.current_signal = "RED"
+        print("Signal:", self.current_signal)
+        time.sleep(2)
+
+
+def simulate_signal():
+
+    controller = SignalController()
+
+    congestion_levels = ["Low","Medium","High"]
+
+    while True:
+        congestion = random.choice(congestion_levels)
+        controller.run_signal_cycle(congestion)
+
+
+simulate_signal()
 ```
 
 ---
