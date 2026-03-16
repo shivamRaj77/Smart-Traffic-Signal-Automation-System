@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-deep: #0a0e17;
+  --bg-card: #111827;
+  --bg-card-hover: #1a2332;
+  --bg-surface: #0f1623;
+  --accent: #22d3ee;
+  --accent-dim: rgba(34,211,238,0.12);
+  --accent-glow: rgba(34,211,238,0.25);
+  --danger: #f43f5e;
+  --danger-dim: rgba(244,63,94,0.12);
+  --warn: #f59e0b;
+  --warn-dim: rgba(245,158,11,0.12);
+  --success: #10b981;
+  --success-dim: rgba(16,185,129,0.12);
+  --txt: #f1f5f9;
+  --txt-s: #94a3b8;
+  --txt-m: #64748b;
+  --bdr: rgba(148,163,184,0.08);
+  --bdr-h: rgba(148,163,184,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg-deep);
+  color: var(--txt);
+  -webkit-font-smoothing: antialiased;
+}
+
+body { min-height: 100vh; }
+input, select, button { font-family: inherit; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.2); border-radius: 3px; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeIn 0.3s ease-out both; }
