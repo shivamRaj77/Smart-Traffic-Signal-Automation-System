@@ -7,10 +7,9 @@ import unittest
 from fastapi.testclient import TestClient
 
 import routes.simulate as simulate_route
+from db import SessionLocal, init_db
+from db_models import SimulationLogORM, SignalOverrideORM, UserORM
 from main import app
-from models.override import _overrides
-from models.simulation_log import _logs
-from models.user import _users
 from services.auth_service import create_default_admin
 
 
@@ -18,9 +17,12 @@ class TestApiBlackBox(unittest.TestCase):
     """Validate endpoint contracts and access control."""
 
     def setUp(self) -> None:
-        _users.clear()
-        _overrides.clear()
-        _logs.clear()
+        init_db()
+        with SessionLocal() as db:
+            db.query(SimulationLogORM).delete()
+            db.query(SignalOverrideORM).delete()
+            db.query(UserORM).delete()
+            db.commit()
         simulate_route.simulation_count = 0
         create_default_admin()
         self.client = TestClient(app)

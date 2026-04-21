@@ -1,58 +1,133 @@
 # Smart Traffic System - Step-by-Step Run Commands (Windows CMD)
 
-## 1. Open project root
+## A. Backend + PostgreSQL (CMD)
+
+### 1. Open project root
 
 ```cmd
 cd D:\Smart-Traffic-Signal-Automation-System
 ```
 
-## 2. Activate virtual environment
+### 2. Activate virtual environment
 
 ```cmd
 .venv\Scripts\activate.bat
 ```
 
-## 3. Install backend dependencies
+### 3. Install backend dependencies
 
 ```cmd
 cd smart_traffic
 python -m pip install -r requirements.txt
 ```
 
-## 4. Run backend API server
+### 4. Set PostgreSQL connection string (current CMD session)
+
+Replace placeholders with your values.
+
+```cmd
+set DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:5432/DB_NAME
+```
+
+Example:
+
+```cmd
+set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/smart_traffic
+```
+
+### 5. Run backend API server
 
 ```cmd
 python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-## 5. Verify backend is running (new terminal)
-
-Open a new CMD terminal and run:
+### 6. Verify backend is running (new CMD terminal)
 
 ```cmd
 cd D:\Smart-Traffic-Signal-Automation-System
 curl http://127.0.0.1:8000/docs
 ```
 
-## 6. Install frontend dependencies (new terminal)
+If the server starts correctly, default admin is auto-created:
+- username: admin
+- password: admin123
+
+## B. Frontend (CMD)
+
+### 1. Open another CMD terminal
 
 ```cmd
 cd D:\Smart-Traffic-Signal-Automation-System\traffic_frontend
 npm install
-```
-
-## 7. Run frontend dev server
-
-```cmd
 npm run dev
 ```
 
-## 8. Open app in browser
+### 2. Open app in browser
 
 - Backend API docs: http://127.0.0.1:8000/docs
-- Frontend app: URL shown in terminal after npm run dev (usually http://localhost:5173)
+- Frontend app: URL shown after `npm run dev` (usually http://localhost:5173)
 
-## 9. Stop servers
+## C. Run Tests (CMD)
 
-- In each running terminal, press Ctrl + C.
+Open a new CMD terminal and run:
+
+```cmd
+cd D:\Smart-Traffic-Signal-Automation-System
+.venv\Scripts\activate.bat
+cd smart_traffic
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+## D. Stop Servers
+
+In each terminal running a server, press Ctrl + C.
+
+## E. Troubleshooting: PostgreSQL Connection Refused
+
+If you see an error like:
+- connection to server at localhost, port 5432 failed: Connection refused
+
+it means PostgreSQL is not reachable with your current DATABASE_URL.
+
+### Option 1 (Quick Run): Use SQLite fallback
+
+In CMD, clear DATABASE_URL and start backend:
+
+```cmd
+cd D:\Smart-Traffic-Signal-Automation-System
+.venv\Scripts\activate.bat
+cd smart_traffic
+set DATABASE_URL=
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Option 2 (PostgreSQL): Start DB and run with PostgreSQL URL
+
+1. Find PostgreSQL service name:
+
+```cmd
+sc query type= service state= all | findstr /I postgres
+```
+
+2. Start the service (replace with your exact service name):
+
+```cmd
+net start postgresql-x64-16
+```
+
+3. Set DATABASE_URL and run backend:
+
+```cmd
+cd D:\Smart-Traffic-Signal-Automation-System
+.venv\Scripts\activate.bat
+cd smart_traffic
+set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/smart_traffic
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Optional: If PostgreSQL is not installed, run it with Docker
+
+```cmd
+docker run --name smart-traffic-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=smart_traffic -p 5432:5432 -d postgres:16
+```
 

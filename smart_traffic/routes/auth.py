@@ -4,8 +4,10 @@ Authentication routes – register & login.
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
+from db import get_db
 from models.user import User, add_user, get_user_by_username
 from schemas.auth import (
     LoginRequest,
@@ -29,9 +31,9 @@ router = APIRouter()
     summary="Register a new user",
     responses={409: {"description": "Username already taken"}},
 )
-async def register(body: RegisterRequest) -> UserResponse:
+async def register(body: RegisterRequest, db: Session = Depends(get_db)) -> UserResponse:
     """Create a new user account."""
-    if get_user_by_username(body.username):
+    if get_user_by_username(db, body.username):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Username already taken",
@@ -41,7 +43,7 @@ async def register(body: RegisterRequest) -> UserResponse:
         hashed_password=hash_password(body.password),
         role=body.role,
     )
-    add_user(user)
+    add_user(db, user)
     return UserResponse(
         id=user.id,
         username=user.username,
@@ -56,9 +58,9 @@ async def register(body: RegisterRequest) -> UserResponse:
     summary="Authenticate and receive a JWT",
     responses={401: {"description": "Invalid credentials"}},
 )
-async def login(body: LoginRequest) -> TokenResponse:
+async def login(body: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse:
     """Validate credentials and return a bearer token."""
-    user = get_user_by_username(body.username)
+    user = get_user_by_username(db, body.username)
     if user is None or not verify_password(body.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -6,8 +6,9 @@ import unittest
 
 import numpy as np
 
-import models.override as override_model
-from models.override import SignalOverride, _overrides, add_override
+from db import SessionLocal, init_db
+from db_models import SignalOverrideORM
+from models.override import SignalOverride, add_override
 from services import traffic_service
 from utils.config import BASE_SIGNAL_CYCLE_SECONDS, MIN_GREEN_TIME_SECONDS
 
@@ -16,8 +17,10 @@ class TestTrafficServiceWhiteBox(unittest.TestCase):
     """Validate internal code paths of the traffic service module."""
 
     def setUp(self) -> None:
-        _overrides.clear()
-        override_model._override_counter = 0
+        init_db()
+        with SessionLocal() as db:
+            db.query(SignalOverrideORM).delete()
+            db.commit()
 
     def test_predict_congestion_normalized_scores(self) -> None:
         features = {
@@ -56,23 +59,27 @@ class TestTrafficServiceWhiteBox(unittest.TestCase):
 
     def test_allocate_green_times_meets_cycle_and_minimum(self) -> None:
         congestion = {"north": 0.25, "south": 0.25, "east": 0.25, "west": 0.25}
-        green = traffic_service.allocate_green_times(congestion, "J1")
+        with SessionLocal() as db:
+            green = traffic_service.allocate_green_times(congestion, "J1", db)
 
         self.assertEqual(sum(green.values()), BASE_SIGNAL_CYCLE_SECONDS)
         self.assertTrue(all(sec >= MIN_GREEN_TIME_SECONDS for sec in green.values()))
 
     def test_allocate_green_times_applies_admin_override(self) -> None:
-        add_override(
-            SignalOverride(
-                junction_id="J1",
-                direction="north",
-                green_time=55,
-                set_by="admin",
+        with SessionLocal() as db:
+            add_override(
+                db,
+                SignalOverride(
+                    junction_id="J1",
+                    direction="north",
+                    green_time=55,
+                    set_by="admin",
+                ),
             )
-        )
         congestion = {"north": 1.0, "south": 0.1, "east": 0.1, "west": 0.1}
 
-        green = traffic_service.allocate_green_times(congestion, "J1")
+        with SessionLocal() as db:
+            green = traffic_service.allocate_green_times(congestion, "J1", db)
 
         self.assertEqual(green["north"], 55)
         self.assertIn("south", green)
@@ -80,7 +87,8 @@ class TestTrafficServiceWhiteBox(unittest.TestCase):
         self.assertIn("west", green)
 
     def test_run_simulation_returns_expected_city_structure(self) -> None:
-        payload = traffic_service.run_simulation()
+        with SessionLocal() as db:
+            payload = traffic_service.run_simulation(db)
 
         self.assertIn("junctions", payload)
         self.assertIn("analysis", payload)

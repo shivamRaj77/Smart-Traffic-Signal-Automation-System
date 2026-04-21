@@ -5,7 +5,9 @@ Admin-only routes – user management, stats, logs, signal overrides.
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
 
+from db import get_db
 from models.override import SignalOverride, add_override, get_all_overrides
 from models.simulation_log import get_logs
 from models.user import User, delete_user_by_id, get_all_users
@@ -26,11 +28,14 @@ router = APIRouter()
     response_model=list[UserResponse],
     summary="List all registered users (admin only)",
 )
-async def list_users(admin: User = Depends(require_admin)) -> list[UserResponse]:
+async def list_users(
+    admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> list[UserResponse]:
     """Return every registered user."""
     return [
         UserResponse(id=u.id, username=u.username, role=u.role, created_at=u.created_at)
-        for u in get_all_users()
+        for u in get_all_users(db)
     ]
 
 
@@ -43,9 +48,10 @@ async def list_users(admin: User = Depends(require_admin)) -> list[UserResponse]
 async def delete_user(
     user_id: str,
     admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
 ) -> dict[str, str]:
     """Remove a user from the system."""
-    if not delete_user_by_id(user_id):
+    if not delete_user_by_id(db, user_id):
         raise HTTPException(status_code=404, detail="User not found")
     return {"detail": f"User {user_id} deleted"}
 
@@ -59,16 +65,19 @@ async def delete_user(
     response_model=StatsResponse,
     summary="Aggregate system statistics (admin only)",
 )
-async def stats(admin: User = Depends(require_admin)) -> StatsResponse:
+async def stats(
+    admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> StatsResponse:
     """Return high-level system counters."""
     from routes.simulate import simulation_count  # avoid circular at module level
 
-    users = get_all_users()
+    users = get_all_users(db)
     return StatsResponse(
         total_users=len(users),
         total_admins=sum(1 for u in users if u.role == "admin"),
         total_simulations=simulation_count,
-        total_overrides=len(get_all_overrides()),
+        total_overrides=len(get_all_overrides(db)),
     )
 
 
@@ -84,9 +93,10 @@ async def stats(admin: User = Depends(require_admin)) -> StatsResponse:
 async def logs(
     limit: int = Query(default=50, ge=1, le=100),
     admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
 ) -> list[LogEntry]:
     """Return the most recent simulation log entries."""
-    raw = get_logs(limit)
+    raw = get_logs(db, limit)
     return [
         LogEntry(
             timestamp=entry["timestamp"],
@@ -111,6 +121,7 @@ async def logs(
 async def create_override(
     body: OverrideRequest,
     admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
 ) -> OverrideResponse:
     """
     Admin sets a manual green-signal duration for a specific junction + direction.
@@ -128,6 +139,7 @@ async def create_override(
         )
 
     override = add_override(
+        db,
         SignalOverride(
             junction_id=body.junction_id,
             direction=body.direction,
@@ -152,6 +164,7 @@ async def create_override(
 )
 async def list_overrides(
     admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
 ) -> list[OverrideResponse]:
     """Return every active admin override."""
     return [
@@ -163,5 +176,5 @@ async def list_overrides(
             set_by=o.set_by,
             created_at=o.created_at,
         )
-        for o in get_all_overrides()
+        for o in get_all_overrides(db)
     ]

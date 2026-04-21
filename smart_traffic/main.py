@@ -14,6 +14,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from db import init_db
 from routes.auth import router as auth_router
 from routes.simulate import router as simulate_router
 from routes.admin import router as admin_router
@@ -24,6 +25,7 @@ from services.auth_service import create_default_admin
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Create default admin user on startup."""
+    init_db()
     create_default_admin()
     yield
 

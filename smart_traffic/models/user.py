@@ -1,15 +1,14 @@
-"""
-In-memory user model and datastore.
-
-In production this would be backed by PostgreSQL via SQLAlchemy, but for a
-self-contained demo an in-memory dict is simpler to run.
-"""
+"""User domain model plus SQLAlchemy-backed repository helpers."""
 
 from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
+
+from sqlalchemy.orm import Session
+
+from db_models import UserORM
 
 
 @dataclass
@@ -25,40 +24,55 @@ class User:
     )
 
 
-# ---------------------------------------------------------------------------
-# In-memory user store  (username → User)
-# ---------------------------------------------------------------------------
-_users: dict[str, User] = {}
+def _to_domain(row: UserORM) -> User:
+    return User(
+        id=row.id,
+        username=row.username,
+        hashed_password=row.hashed_password,
+        role=row.role,
+        created_at=row.created_at,
+    )
 
 
-def get_all_users() -> list[User]:
+def get_all_users(db: Session) -> list[User]:
     """Return every registered user."""
-    return list(_users.values())
+    rows = db.query(UserORM).all()
+    return [_to_domain(r) for r in rows]
 
 
-def get_user_by_username(username: str) -> User | None:
+def get_user_by_username(db: Session, username: str) -> User | None:
     """Look up a user by username."""
-    return _users.get(username)
+    row = db.query(UserORM).filter(UserORM.username == username).first()
+    return _to_domain(row) if row else None
 
 
-def get_user_by_id(user_id: str) -> User | None:
+def get_user_by_id(db: Session, user_id: str) -> User | None:
     """Look up a user by their unique id."""
-    for user in _users.values():
-        if user.id == user_id:
-            return user
-    return None
+    row = db.query(UserORM).filter(UserORM.id == user_id).first()
+    return _to_domain(row) if row else None
 
 
-def add_user(user: User) -> User:
+def add_user(db: Session, user: User) -> User:
     """Persist a new user."""
-    _users[user.username] = user
+    row = UserORM(
+        id=user.id,
+        username=user.username,
+        hashed_password=user.hashed_password,
+        role=user.role,
+        created_at=user.created_at,
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    user.id = row.id
     return user
 
 
-def delete_user_by_id(user_id: str) -> bool:
+def delete_user_by_id(db: Session, user_id: str) -> bool:
     """Delete a user by id.  Returns True if found and deleted."""
-    for uname, user in list(_users.items()):
-        if user.id == user_id:
-            del _users[uname]
-            return True
-    return False
+    row = db.query(UserORM).filter(UserORM.id == user_id).first()
+    if row is None:
+        return False
+    db.delete(row)
+    db.commit()
+    return True

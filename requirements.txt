@@ -23,6 +23,8 @@ PyYAML==6.0.3
 rsa==4.9.1
 scikit-learn==1.8.0
 scipy==1.17.1
+SQLAlchemy==2.0.43
+psycopg2-binary==2.9.10
 six==1.17.0
 starlette==0.38.6
 threadpoolctl==3.6.0

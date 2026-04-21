@@ -5,7 +5,9 @@ Simulation endpoint – runs the traffic engine and returns results.
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
+from db import get_db
 from models.simulation_log import add_log
 from models.user import User
 from schemas.simulation import SimulationResponse
@@ -24,7 +26,10 @@ simulation_count: int = 0
     summary="Run one simulation tick for all 9 junctions",
     responses={401: {"description": "Not authenticated"}},
 )
-async def simulate(user: User = Depends(get_current_user)) -> SimulationResponse:
+async def simulate(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> SimulationResponse:
     """
     Generates synthetic traffic data, predicts congestion using the ML model,
     allocates green-signal timings, and returns the full result set.
@@ -34,11 +39,12 @@ async def simulate(user: User = Depends(get_current_user)) -> SimulationResponse
     global simulation_count
     simulation_count += 1
 
-    result = run_simulation()
+    result = run_simulation(db)
 
     # Persist a lightweight log entry
     analysis = result["analysis"]
     add_log(
+        db,
         {
             "avg_congestion": analysis["avg_congestion"],
             "critical_junction": analysis["critical_junction"],

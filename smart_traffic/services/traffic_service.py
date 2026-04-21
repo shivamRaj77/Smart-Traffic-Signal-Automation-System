@@ -14,6 +14,7 @@ from typing import Any
 
 import numpy as np
 from sklearn.linear_model import Ridge
+from sqlalchemy.orm import Session
 
 from models.override import get_override
 from utils.config import (
@@ -113,6 +114,7 @@ def predict_congestion(features: dict[str, dict[str, Any]]) -> dict[str, float]:
 def allocate_green_times(
     congestion: dict[str, float],
     junction_id: str,
+    db: Session,
 ) -> dict[str, int]:
     """
     Distribute *BASE_SIGNAL_CYCLE_SECONDS* among four directions proportionally
@@ -127,7 +129,7 @@ def allocate_green_times(
 
     green_times: dict[str, int] = {}
     for direction in DIRECTIONS:
-        ovr = get_override(junction_id, direction)
+        ovr = get_override(db, junction_id, direction)
         if ovr is not None:
             green_times[direction] = ovr.green_time
         else:
@@ -142,7 +144,7 @@ def allocate_green_times(
 # Full simulation run
 # ---------------------------------------------------------------------------
 
-def run_simulation() -> dict[str, Any]:
+def run_simulation(db: Session) -> dict[str, Any]:
     """
     Execute one full simulation tick for all 9 junctions.
 
@@ -153,7 +155,7 @@ def run_simulation() -> dict[str, Any]:
     for jid in JUNCTIONS:
         traffic = _generate_junction_traffic()
         congestion = predict_congestion(traffic)
-        green_times = allocate_green_times(congestion, jid)
+        green_times = allocate_green_times(congestion, jid, db)
         total_cong = round(sum(congestion.values()) / len(DIRECTIONS), 4)
 
         junction_results.append(
