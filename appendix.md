@@ -24,7 +24,7 @@ python -m pip install -r requirements.txt
 ### 4. Set PostgreSQL connection string (current CMD session)
 
 Replace placeholders with your values.
-
+   
 ```cmd
 set DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:5432/DB_NAME
 ```
