@@ -126,6 +126,23 @@ West: xx.x seconds
 
 ---
 
+## 🗄️ Backend Database (PostgreSQL)
+
+The FastAPI backend in [smart_traffic](smart_traffic) uses SQLAlchemy and can connect
+to PostgreSQL via the `DATABASE_URL` environment variable.
+
+Example (see [smart_traffic/.env.example](smart_traffic/.env.example)):
+
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/smart_traffic
+```
+
+Notes:
+- Set `DATABASE_URL` before running the backend.
+- The backend will create tables automatically on startup.
+
+---
+
 ## 🧭 Future Extensions
 
 - 🔐 Encrypt traffic data using cryptographic schemes  
