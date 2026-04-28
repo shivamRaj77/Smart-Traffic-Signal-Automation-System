@@ -19,6 +19,10 @@ const adminNav = [
 
 export default function Sidebar() {
   const { user, logout, isAdmin } = useAuth()
+  const roleLabel = user?.role
+    ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+    : 'User'
+  const usernameLabel = user?.username || 'User'
 
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
@@ -66,8 +70,8 @@ export default function Sidebar() {
       <div className="px-5 py-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[13px] font-semibold">{user?.username}</p>
-            <p className="text-[11px] text-[var(--txt-muted)]">{user?.role}</p>
+            <p className="text-[13px] font-semibold">{usernameLabel}</p>
+            <p className="text-[11px] text-[var(--txt-muted)]">{roleLabel}</p>
           </div>
           <button
             onClick={logout}
